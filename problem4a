@@ -1,0 +1,39 @@
+#!/usr/bin/env python3
+import hashlib, math
+
+USERNAME = "murad031"
+
+p_hex = ("EE3C01301324C47D339F8F546F3066DE47640C9E0661DE24768266E46B35F68"
+          "AEA254A973F665588D299B58413ED0E1AC34A578C6CA4606047F44BEB9FBFB"
+          "710389158F3BEFFC80BC636ABD285759535EC980E250F13667C8159461DD2E"
+          "7C8C2FB5D953BD6E205376B7A55AC0809710BE419457EA8F904F1BEA493B1F7"
+          "16353B")
+
+q_hex = ("61391F7455FBE478037E36ABDAB3CF4DE1C687E131B3633BA257CE91B3256A44"
+          "4A53C818A668A77167502AF2DC0FAA0E876B88DFC54BA6D199A475DC81C9BC3"
+          "229182DBD91C3491AC04A9FD5985C1A3E1325FAF01C906B96DAD7716BC2A0A2"
+          "A476238E6E441530F931E83F81B6077AB00790AD08DF6CEF3380F37B6AD25E3"
+          "AFB")
+
+p = int(p_hex, 16)
+q = int(q_hex, 16)
+phi = (p - 1) * (q - 1)
+
+
+sha_hex = hashlib.sha256(USERNAME.encode()).hexdigest()
+e = int(sha_hex, 16)
+
+if e % 2 == 0:
+    e += 1 
+
+g = math.gcd(e, phi)
+
+print("SHA256(username):", sha_hex)
+print("Final e (hex):", format(e, "x"))
+print("gcd(e, φ) =", g)
+
+if g != 1:
+    print("No modular inverse. d cannot be computed.")
+else:
+    d = pow(e, -1, phi)
+    print("d (hex):", format(d, "x"))
